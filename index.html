@@ -2,1081 +2,146 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Buku Tamu • Google Drive</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>BUKU TAMU LAPAS BAUBAU</title>
     <style>
+        /* Gaya dasar untuk tampilan yang proposional dan bersih */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        :root {
-            --primary: #0F9D58;
-            --primary-dark: #0B7C44;
-            --primary-light: #34A853;
-            --secondary: #4285F4;
-            --danger: #EA4335;
-            --warning: #FBBC05;
-            --dark: #202124;
-            --gray: #5F6368;
-            --light: #F8F9FA;
-            --border: #DADCE0;
-            --card: #FFFFFF;
-            --bg: #F1F3F4;
-            --shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         body {
-            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--dark);
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #f5f7fa;
             min-height: 100vh;
-            padding-bottom: 20px;
-        }
-
-        .app-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 20px 16px 24px;
-            border-bottom-left-radius: 28px;
-            border-bottom-right-radius: 28px;
-            box-shadow: var(--shadow);
-        }
-
-        .header-content {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .header-icon {
-            width: 52px;
-            height: 52px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-        }
-
-        .header-text h1 {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .header-text p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .drive-badge {
-            background: rgba(255,255,255,0.15);
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 13px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .stats-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .stat-card {
-            background: rgba(255,255,255,0.15);
-            border-radius: 20px;
-            padding: 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .stat-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .stat-info h3 {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .stat-info span {
-            font-size: 12px;
-            opacity: 0.8;
+            justify-content: flex-start;
+            padding: 16px;
         }
 
         .container {
-            padding: 20px 16px;
-        }
-
-        .form-card {
-            background: var(--card);
-            border-radius: 28px;
+            width: 100%;
+            max-width: 1200px; /* Lebar maksimum untuk layar besar */
+            background-color: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
             padding: 24px;
-            box-shadow: var(--shadow);
-            margin-bottom: 24px;
-            border: 1px solid var(--border);
+            margin: 20px auto;
         }
 
-        .form-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .form-title i {
-            width: 40px;
-            height: 40px;
-            background: var(--primary-light);
-            color: white;
+        /* Area untuk memuat konten dari URL */
+        #content-frame {
+            width: 100%;
+            min-height: 70vh; /* Tinggi proporsional terhadap viewport */
+            border: 1px solid #e0e0e0;
             border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
+            background-color: #ffffff;
+            transition: all 0.3s ease;
         }
 
-        .form-title h2 {
-            font-size: 18px;
+        /* Opsi 1: Jika URL adalah aplikasi web, gunakan iframe */
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 75%; /* Rasio aspek 4:3, bisa diubah */
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Opsi 2: Untuk konten data (seperti teks/json), gunakan div */
+        .data-container {
+            width: 100%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            font-size: clamp(1rem, 2vw, 1.2rem); /* Ukuran font proporsional */
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        /* Judul dan elemen lain */
+        h1 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-bottom: 16px;
+            color: #333;
             font-weight: 600;
         }
 
-        .input-group {
+        p {
             margin-bottom: 20px;
+            color: #555;
         }
 
-        .input-label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--gray);
-            margin-bottom: 6px;
-        }
-
-        .input-label i {
-            color: var(--primary);
-        }
-
-        .required {
-            color: var(--danger);
-            margin-left: 4px;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 16px 18px;
-            background: var(--light);
-            border: 1.5px solid var(--border);
-            border-radius: 20px;
-            font-size: 16px;
-            transition: all 0.2s;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-            box-shadow: 0 0 0 4px rgba(15,157,88,0.1);
-        }
-
-        select.input-field {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235F6368' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 18px center;
-            padding-right: 48px;
-        }
-
-        .photo-upload-area {
-            position: relative;
-            background: var(--light);
-            border: 2px dashed var(--border);
-            border-radius: 24px;
-            padding: 24px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            min-height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .photo-upload-area:active {
-            transform: scale(0.98);
-            background: #e8eaed;
-        }
-
-        .photo-upload-area input {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .upload-placeholder i {
-            font-size: 48px;
-            color: var(--primary);
-            margin-bottom: 12px;
-        }
-
-        .upload-placeholder p {
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--dark);
-            margin-bottom: 4px;
-        }
-
-        .upload-placeholder span {
-            font-size: 12px;
-            color: var(--gray);
-        }
-
-        .photo-preview {
-            display: none;
-            width: 100%;
-            position: relative;
-        }
-
-        .photo-preview img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 20px;
-        }
-
-        .photo-preview button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 18px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            font-size: 17px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 8px 20px rgba(15,157,88,0.3);
-            margin-top: 10px;
-        }
-
-        .submit-btn:active {
-            transform: scale(0.97);
-            background: var(--primary-dark);
-        }
-
-        .submit-btn:disabled {
-            opacity: 0.6;
-            transform: none;
-        }
-
-        .list-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-
-        .list-header h3 {
-            font-size: 18px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .list-header h3 i {
-            color: var(--primary);
-        }
-
-        .guest-count {
-            background: var(--primary-light);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 13px;
-        }
-
-        .guests-container {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .guest-card {
-            background: var(--card);
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
-
-        .guest-photo-row {
-            display: flex;
-            padding: 16px;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .guest-thumb {
-            width: 70px;
-            height: 70px;
-            border-radius: 20px;
-            overflow: hidden;
-            background: var(--light);
-            border: 3px solid white;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-        }
-
-        .guest-thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .guest-main {
-            flex: 1;
-        }
-
-        .guest-name {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .guest-name i {
-            color: var(--primary);
-        }
-
-        .guest-instansi {
-            font-size: 13px;
-            color: var(--gray);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-bottom: 6px;
-        }
-
-        .guest-badge {
-            background: var(--secondary);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 11px;
-            font-weight: 500;
-            display: inline-block;
-        }
-
-        .guest-footer {
-            padding: 12px 16px;
-            background: var(--light);
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 12px;
-            color: var(--gray);
-        }
-
-        .guest-footer i {
-            color: var(--primary);
-        }
-
-        .load-more {
-            width: 100%;
-            padding: 16px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 30px;
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 16px;
-            cursor: pointer;
-        }
-
-        .load-more:active {
-            background: var(--light);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            background: var(--card);
-            border-radius: 28px;
-        }
-
-        .empty-state i {
-            font-size: 64px;
-            color: var(--primary-light);
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
-        }
-
-        .modal-content {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal-img {
-            max-width: 100%;
-            max-height: 80%;
-            border-radius: 24px;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            width: 48px;
-            height: 48px;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .modal-caption {
-            position: absolute;
-            bottom: 30px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: white;
-            font-size: 16px;
-            padding: 20px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.5));
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 20px;
-            right: 20px;
-            background: var(--dark);
-            color: white;
-            padding: 16px 20px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: var(--shadow);
-            z-index: 1002;
-            animation: slideUp 0.3s;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(100px);
-                opacity: 0;
+        /* Responsif untuk layar kecil */
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px;
+                border-radius: 20px;
             }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .toast.success { background: var(--primary); }
-        .toast.error { background: var(--danger); }
-        .toast.warning { background: var(--warning); color: var(--dark); }
-
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="app-header">
-        <div class="header-content">
-            <div class="header-icon">
-                <i class="fab fa-google-drive"></i>
-            </div>
-            <div class="header-text">
-                <h1>Buku Tamu Digital</h1>
-                <p>Google Drive Integration</p>
-            </div>
-        </div>
-
-        <div class="drive-badge">
-            <i class="fab fa-google-drive"></i>
-            <span>Foto tersimpan di Google Drive</span>
-        </div>
-
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="totalTamu">0</h3>
-                    <span>Total Tamu</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-calendar-day"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="todayTamu">0</h3>
-                    <span>Hari Ini</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="container">
-        <div class="form-card">
-            <div class="form-title">
-                <i class="fas fa-pen-fancy"></i>
-                <h2>Formulir Tamu</h2>
-            </div>
-            
-            <form id="guestForm">
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-user"></i>
-                        Nama Lengkap <span class="required">*</span>
-                    </div>
-                    <input type="text" class="input-field" id="nama" placeholder="Masukkan nama lengkap" required>
-                </div>
+        <h1>BUKU TAMU LAPAS BAUBAU</h1>
+        <p>Berikut adalah tampilan proporsional otomatis dari sumber data:</p>
 
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-building"></i>
-                        Instansi/Perusahaan
-                    </div>
-                    <input type="text" class="input-field" id="instansi" placeholder="Contoh: PT Maju Jaya">
-                </div>
+        <!-- Pilih salah satu metode sesuai kebutuhan -->
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <div class="input-group">
-                        <div class="input-label">
-                            <i class="fas fa-envelope"></i>
-                            Email
-                        </div>
-                        <input type="email" class="input-field" id="email" placeholder="email@contoh.com">
-                    </div>
-                    <div class="input-group">
-                        <div class="input-label">
-                            <i class="fas fa-phone-alt"></i>
-                            Telepon
-                        </div>
-                        <input type="tel" class="input-field" id="telepon" placeholder="08123456789">
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-clipboard-list"></i>
-                        Keperluan <span class="required">*</span>
-                    </div>
-                    <select class="input-field" id="keperluan" required>
-                        <option value="" disabled selected>Pilih keperluan</option>
-                        <option value="Kunjungan">Kunjungan</option>
-                        <option value="Meeting">Meeting / Rapat</option>
-                        <option value="Pengantaran Barang">Pengantaran Barang</option>
-                        <option value="Interview">Interview</option>
-                        <option value="Lainnya">Lainnya</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-user-tie"></i>
-                        Bertemu Dengan
-                    </div>
-                    <input type="text" class="input-field" id="bertemu" placeholder="Nama yang dituju">
-                </div>
-
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-comment-dots"></i>
-                        Pesan / Keterangan
-                    </div>
-                    <textarea class="input-field" id="pesan" rows="3" placeholder="Tulis pesan..."></textarea>
-                </div>
-
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-camera"></i>
-                        Foto Selfie <span class="required">*</span>
-                        <span style="margin-left: 8px; font-size: 11px; color: var(--gray);">
-                            <i class="fab fa-google-drive"></i> Akan simpan di Drive
-                        </span>
-                    </div>
-                    <div class="photo-upload-area" id="photoArea">
-                        <input type="file" id="foto" accept="image/*" capture="environment" required>
-                        <div class="upload-placeholder" id="uploadPlaceholder">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <p>Tap untuk ambil foto</p>
-                            <span>Maks 2MB (JPG/PNG)</span>
-                        </div>
-                        <div class="photo-preview" id="photoPreview">
-                            <img id="previewImg" src="" alt="Preview">
-                            <button type="button" id="removePhoto" onclick="removePhoto()">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display: flex; align-items: center; gap: 12px; margin: 16px 0;">
-                    <input type="checkbox" id="suhu" style="width: 20px; height: 20px;">
-                    <label for="suhu" style="display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-thermometer-half" style="color: var(--primary);"></i>
-                        Suhu tubuh normal (tidak demam)
-                    </label>
-                </div>
-
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    <i class="fab fa-google-drive"></i>
-                    <span>Simpan ke Google Drive</span>
-                </button>
-            </form>
+        <!-- METODE 1: Gunakan iframe jika URL adalah aplikasi web utuh -->
+        <div class="iframe-container">
+            <iframe src="https://script.google.com/macros/s/AKfycby_fxgJlDaR6O8h6Ymq-tPj-d98vxhWj7iICXc5S924yybDMFiO2uNXr-pL_hbbwss1/exec" 
+                    title="Konten Aplikasi Web"
+                    loading="lazy"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
+            </iframe>
         </div>
 
-        <div class="list-header">
-            <h3>
-                <i class="fas fa-history"></i>
-                Tamu Terkini
-            </h3>
-            <span class="guest-count" id="guestCount">0</span>
+        <!-- METODE 2: Alternatif untuk mengambil dan menampilkan data (misalnya JSON) 
+        <div id="dataDisplay" class="data-container">
+            Memuat data...
         </div>
 
-        <div class="guests-container" id="guestsContainer">
-            <div class="empty-state">
-                <i class="fas fa-users-slash"></i>
-                <p>Belum ada data tamu</p>
-            </div>
-        </div>
+        <script>
+            // Contoh kode untuk mengambil data dari URL (jika mengembalikan JSON)
+            async function loadData() {
+                try {
+                    const response = await fetch('URL_ANDA_DISINI');
+                    const data = await response.json();
+                    document.getElementById('dataDisplay').innerHTML = JSON.stringify(data, null, 2);
+                } catch (error) {
+                    document.getElementById('dataDisplay').innerHTML = 'Gagal memuat data.';
+                }
+            }
+            // loadData(); // Aktifkan jika URL mengembalikan JSON
+        </script>
+        -->
 
-        <button class="load-more" id="loadMoreBtn" onclick="loadMore()" style="display: none;">
-            <i class="fas fa-sync-alt"></i>
-            <span>Muat Lebih Banyak</span>
-        </button>
+        <!-- Catatan: Ganti URL pada iframe dengan URL Anda jika perlu -->
     </div>
-
-    <div class="modal" id="photoModal">
-        <button class="modal-close" onclick="closeModal()">
-            <i class="fas fa-times"></i>
-        </button>
-        <div class="modal-content">
-            <img class="modal-img" id="modalImg" src="">
-            <div class="modal-caption" id="modalCaption"></div>
-        </div>
-    </div>
-
-    <div id="toast" class="toast" style="display: none;"></div>
 
     <script>
-        // ==================== KONFIGURASI ====================
-        // GANTI DENGAN URL WEB APP ANDA!
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_fxgJlDaR6O8h6Ymq-tPj-d98vxhWj7iICXc5S924yybDMFiO2uNXr-pL_hbbwss1/exec';
-        const ITEMS_PER_PAGE = 5;
-        
-        // ==================== STATE ====================
-        let allGuests = [];
-        let currentPage = 1;
-
-        // ==================== INISIALISASI ====================
-        document.addEventListener('DOMContentLoaded', () => {
-            setupEventListeners();
-            testConnection();
-            loadFromSheet();
+        // JavaScript tambahan untuk penyesuaian dinamis jika diperlukan
+        // Misalnya, menyesuaikan tinggi iframe agar selalu proporsional
+        window.addEventListener('load', function() {
+            // Kode untuk menyesuaikan tinggi iframe secara otomatis bisa ditambahkan di sini
+            // Namun untuk keamanan, fitur ini terbatas karena kebijakan origin yang sama
         });
-
-        function setupEventListeners() {
-            document.getElementById('guestForm').addEventListener('submit', handleSubmit);
-            document.getElementById('photoArea').addEventListener('click', () => {
-                document.getElementById('foto').click();
-            });
-            document.getElementById('foto').addEventListener('change', handlePhotoSelect);
-        }
-
-        // ==================== TEST KONEKSI ====================
-        async function testConnection() {
-            try {
-                const formData = new FormData();
-                formData.append('action', 'test');
-                
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const result = await response.json();
-                console.log('Test connection:', result);
-                
-                if (result.success) {
-                    showToast('✅ Terhubung ke Google Drive', 'success');
-                } else {
-                    showToast('⚠️ ' + (result.error || 'Koneksi bermasalah'), 'warning');
-                }
-            } catch (error) {
-                console.error('Connection test failed:', error);
-                showToast('❌ Gagal terhubung ke server', 'error');
-            }
-        }
-
-        // ==================== HANDLE SUBMIT ====================
-        async function handleSubmit(e) {
-            e.preventDefault();
-            
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<div class="spinner"></div><span>Menyimpan ke Drive...</span>';
-
-            try {
-                // Validasi
-                const nama = document.getElementById('nama').value.trim();
-                const keperluan = document.getElementById('keperluan').value;
-                const fotoFile = document.getElementById('foto').files[0];
-
-                if (!nama) {
-                    showToast('Nama harus diisi', 'warning');
-                    return;
-                }
-                if (!keperluan) {
-                    showToast('Pilih keperluan', 'warning');
-                    return;
-                }
-                if (!fotoFile) {
-                    showToast('Ambil foto selfie', 'warning');
-                    return;
-                }
-
-                // Validasi ukuran foto
-                if (fotoFile.size > 2 * 1024 * 1024) {
-                    showToast('Foto maksimal 2MB', 'error');
-                    return;
-                }
-
-                showToast('Mengirim data...', 'info');
-
-                // Konversi foto ke Base64
-                const fotoBase64 = await fileToBase64(fotoFile);
-                console.log('Foto Base64 length:', fotoBase64.length);
-
-                // Siapkan data
-                const formData = new FormData();
-                formData.append('action', 'add');
-                formData.append('nama', nama);
-                formData.append('instansi', document.getElementById('instansi').value || '-');
-                formData.append('email', document.getElementById('email').value || '-');
-                formData.append('telepon', document.getElementById('telepon').value || '-');
-                formData.append('keperluan', keperluan);
-                formData.append('bertemu', document.getElementById('bertemu').value || '-');
-                formData.append('pesan', document.getElementById('pesan').value || '-');
-                formData.append('suhu', document.getElementById('suhu').checked ? 'Normal' : 'Tidak Dicek');
-                formData.append('foto', fotoBase64);
-
-                // Kirim ke server
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json();
-                console.log('Server response:', result);
-
-                if (result.success) {
-                    showToast(`✅ Data tersimpan! ID: ${result.data.id}`, 'success');
-                    
-                    // Reset form
-                    document.getElementById('guestForm').reset();
-                    removePhoto();
-                    
-                    // Reload data
-                    setTimeout(() => {
-                        loadFromSheet();
-                    }, 1000);
-                } else {
-                    throw new Error(result.error || 'Gagal menyimpan');
-                }
-
-            } catch (error) {
-                console.error('Submit error:', error);
-                showToast('❌ Error: ' + error.message, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fab fa-google-drive"></i><span>Simpan ke Google Drive</span>';
-            }
-        }
-
-        // ==================== FILE TO BASE64 ====================
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // ==================== LOAD DATA ====================
-        async function loadFromSheet() {
-            try {
-                const formData = new FormData();
-                formData.append('action', 'getAll');
-                
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    allGuests = result.data || [];
-                    displayGuests();
-                    updateStats();
-                }
-            } catch (error) {
-                console.error('Load error:', error);
-            }
-        }
-
-        // ==================== DISPLAY GUESTS ====================
-        function displayGuests() {
-            const container = document.getElementById('guestsContainer');
-            const start = 0;
-            const end = currentPage * ITEMS_PER_PAGE;
-            const guestsToShow = allGuests.slice(start, end);
-
-            if (guestsToShow.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-users-slash"></i>
-                        <p>Belum ada data tamu</p>
-                    </div>
-                `;
-                document.getElementById('loadMoreBtn').style.display = 'none';
-                return;
-            }
-
-            let html = '';
-            guestsToShow.forEach(guest => {
-                html += createGuestCard(guest);
-            });
-
-            container.innerHTML = html;
-
-            const loadMoreBtn = document.getElementById('loadMoreBtn');
-            if (end >= allGuests.length) {
-                loadMoreBtn.style.display = 'none';
-            } else {
-                loadMoreBtn.style.display = 'flex';
-            }
-        }
-
-        function createGuestCard(guest) {
-            const waktu = formatWaktu(guest.Timestamp);
-            const fotoUrl = guest.FotoURL || 'https://via.placeholder.com/200x200?text=No+Photo';
-            
-            return `
-                <div class="guest-card">
-                    <div class="guest-photo-row">
-                        <div class="guest-thumb" onclick="openPhotoModal('${fotoUrl}', '${escapeHtml(guest.Nama)}')">
-                            <img src="${fotoUrl}" alt="${guest.Nama}" onerror="this.src='https://via.placeholder.com/200x200?text=Error'">
-                        </div>
-                        <div class="guest-main">
-                            <div class="guest-name">
-                                <i class="fas fa-user-circle"></i>
-                                ${escapeHtml(guest.Nama)}
-                            </div>
-                            <div class="guest-instansi">
-                                <i class="fas fa-building"></i>
-                                ${escapeHtml(guest.Instansi)}
-                            </div>
-                            <span class="guest-badge">
-                                <i class="fas fa-tag"></i>
-                                ${escapeHtml(guest.Keperluan)}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="guest-footer">
-                        <span><i class="fas fa-clock"></i> ${waktu}</span>
-                        ${guest.Bertemu && guest.Bertemu !== '-' ? 
-                            `<span><i class="fas fa-user-tie"></i> ${escapeHtml(guest.Bertemu)}</span>` : ''}
-                    </div>
-                </div>
-            `;
-        }
-
-        function formatWaktu(timestamp) {
-            if (!timestamp) return '-';
-            const date = new Date(timestamp);
-            const now = new Date();
-            const diff = Math.floor((now - date) / 1000);
-
-            if (diff < 60) return 'Baru saja';
-            if (diff < 3600) return `${Math.floor(diff / 60)} menit lalu`;
-            if (diff < 86400) return `${Math.floor(diff / 3600)} jam lalu`;
-            if (diff < 604800) return `${Math.floor(diff / 86400)} hari lalu`;
-            return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // ==================== UPDATE STATS ====================
-        function updateStats() {
-            document.getElementById('totalTamu').textContent = allGuests.length;
-            document.getElementById('guestCount').textContent = allGuests.length;
-            
-            // Hitung tamu hari ini
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            const todayCount = allGuests.filter(guest => {
-                const guestDate = new Date(guest.Timestamp);
-                return guestDate >= today;
-            }).length;
-            
-            document.getElementById('todayTamu').textContent = todayCount;
-        }
-
-        // ==================== UI FUNCTIONS ====================
-        function handlePhotoSelect(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            if (file.size > 2 * 1024 * 1024) {
-                showToast('Foto maksimal 2MB', 'error');
-                e.target.value = '';
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                document.getElementById('previewImg').src = e.target.result;
-                document.getElementById('uploadPlaceholder').style.display = 'none';
-                document.getElementById('photoPreview').style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function removePhoto() {
-            document.getElementById('foto').value = '';
-            document.getElementById('uploadPlaceholder').style.display = 'block';
-            document.getElementById('photoPreview').style.display = 'none';
-        }
-
-        function openPhotoModal(src, caption) {
-            document.getElementById('modalImg').src = src;
-            document.getElementById('modalCaption').textContent = caption;
-            document.getElementById('photoModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('photoModal').style.display = 'none';
-        }
-
-        function loadMore() {
-            currentPage++;
-            displayGuests();
-        }
-
-        function showToast(message, type = 'info', duration = 3000) {
-            const toast = document.getElementById('toast');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `
-                <i class="fas ${type === 'success' ? 'fa-check-circle' : 
-                                 type === 'error' ? 'fa-exclamation-circle' : 
-                                 type === 'warning' ? 'fa-exclamation-triangle' : 
-                                 'fa-info-circle'}"></i>
-                <span>${message}</span>
-            `;
-            toast.style.display = 'flex';
-
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, duration);
-        }
     </script>
 </body>
 </html>
