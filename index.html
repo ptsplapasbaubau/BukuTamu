@@ -1,21 +1,44 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <title>BUKU TAMU LAPAS BAUBAU</title>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>BUKU TAMU DIGITAL LAPAS BAUBAU</title>
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+#appFrame {
+  border: 0;
+  width: 100vw;
+  height: 100dvh; /* kunci utama HP modern */
+}
+</style>
 </head>
 
-<body style="margin:0;padding:0;height:100vh;overflow:hidden;">
+<body>
 
 <iframe
+  id="appFrame"
   src="https://script.google.com/macros/s/AKfycbxQnhPg8AroeyHk8HRLR7EwfUHhdLBymDTKtP-SG4yiTzJGHCy1_vBuLM-18Jvp9ZXbvQ/exec"
-  style="border:0;width:100vw;height:100vh;"
   allowfullscreen>
 </iframe>
+
+<script>
+// fallback untuk HP lama
+function setRealHeight() {
+  document.getElementById("appFrame").style.height =
+    window.innerHeight + "px";
+}
+window.addEventListener("resize", setRealHeight);
+setRealHeight();
+</script>
 
 </body>
 </html>
