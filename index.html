@@ -115,6 +115,7 @@
         .stat-info h3 {
             font-size: 20px;
             font-weight: 700;
+            line-height: 1.2;
         }
 
         .stat-info span {
@@ -860,7 +861,7 @@
                 console.log('Server response:', result);
 
                 if (result.success) {
-                    showToast(`✅ Data tersimpan! ID: ${result.id}`, 'success');
+                    showToast(`✅ Data tersimpan! ID: ${result.data.id}`, 'success');
                     
                     // Reset form
                     document.getElementById('guestForm').reset();
