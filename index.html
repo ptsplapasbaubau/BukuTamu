@@ -1,53 +1,99 @@
 <!DOCTYPE html>
 
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>BUKU TAMU</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <style>
-    body{
-      margin:0;
-      font-family: Arial, Helvetica, sans-serif;
-      background:#f4f6f9;
-    }
+<title>Buku Tamu Digital</title>
 
-    header{
-      background:#0d6efd;
-      color:white;
-      padding:14px 20px;
-      font-size:18px;
-      font-weight:bold;
-    }
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  height:100%;
+  background:#0f172a;
+  overflow:hidden;
+  font-family:Arial,Helvetica,sans-serif;
+}
 
-    .container{
-      height:calc(100vh - 52px);
-    }
+/* HEADER */
+.header{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:55px;
+  background:#1e293b;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  font-weight:bold;
+  z-index:10;
+  letter-spacing:.5px;
+}
 
-    iframe{
-      border:none;
-      width:100%;
-      height:100%;
-      background:white;
-    }
-  </style>
+/* IFRAME */
+.frame-container{
+  position:absolute;
+  top:55px;
+  bottom:0;
+  left:0;
+  right:0;
+}
+
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
+  background:white;
+}
+
+/* LOADING */
+.loader{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:18px;
+  background:#0f172a;
+  z-index:5;
+}
+</style>
 
 </head>
 
 <body>
 
-<header>
-  buku tamu LAPAS BAUBAU
-</header>
-
-<div class="container">
-  <iframe 
-    src="https://script.google.com/macros/s/AKfycbxQnhPg8AroeyHk8HRLR7EwfUHhdLBymDTKtP-SG4yiTzJGHCy1_vBuLM-18Jvp9ZXbvQ/exec"
-    allow="camera; microphone; geolocation"
-    loading="lazy">
-  </iframe>
+<div class="header">
+BUKU TAMU DIGITAL
 </div>
+
+<div class="loader" id="loading">
+Memuat aplikasi...
+</div>
+
+<div class="frame-container">
+<iframe id="appFrame"
+src="https://script.google.com/macros/s/AKfycbxQnhPg8AroeyHk8HRLR7EwfUHhdLBymDTKtP-SG4yiTzJGHCy1_vBuLM-18Jvp9ZXbvQ/exec"
+onload="hideLoader()"
+allow="camera; microphone; fullscreen">
+</iframe>
+</div>
+
+<script>
+function hideLoader(){
+  document.getElementById("loading").style.display="none";
+}
+
+/* AUTO REFRESH setiap 30 menit (mode kiosk) */
+setInterval(()=>{
+  document.getElementById("appFrame").contentWindow.location.reload();
+},1800000);
+</script>
 
 </body>
 </html>
