@@ -955,209 +955,194 @@
             }, CONFIG.SYNC_INTERVAL);
         }
 
-        // ==================== KONEKSI GOOGLE SHEETS ====================
-        async function fetchFromSheet(action, data = {}) {
-            if (!isOnline) {
-                throw new Error('Tidak ada koneksi internet');
-            }
+       // ==================== KONEKSI GOOGLE SHEETS ====================
+async function fetchFromSheet(action, data = {}) {
+    if (!isOnline) {
+        throw new Error('Tidak ada koneksi internet');
+    }
 
-            console.log('Fetching from sheet:', action, data);
+    console.log('Sending to sheet:', action);
 
-            // Gunakan FormData untuk mengirim file
-            const formData = new FormData();
-            formData.append('action', action);
-            
-            // Tambahkan semua data ke FormData
-            Object.keys(data).forEach(key => {
-                if (data[key] !== undefined && data[key] !== null) {
-                    formData.append(key, data[key]);
-                    console.log(`Appending ${key}:`, data[key].substring ? data[key].substring(0, 50) + '...' : data[key]);
-                }
-            });
+    // Gunakan FormData untuk mengirim file dengan benar
+    const formData = new FormData();
+    formData.append('action', action);
+    
+    // Tambahkan semua data ke FormData
+    Object.keys(data).forEach(key => {
+        if (data[key] !== undefined && data[key] !== null) {
+            formData.append(key, data[key]);
+        }
+    });
 
-            try {
-                // Gunakan no-cors mode untuk menghindari CORS issues
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', // Tambahkan ini untuk mengatasi CORS
-                    body: formData
-                });
-                
-                // Karena no-cors, response tidak bisa dibaca
-                // Kita asumsikan berhasil jika tidak error
-                console.log('Fetch response:', response);
-                
-                // Kembalikan response sukses dummy
-                return { success: true, message: 'Data terkirim' };
-                
-            } catch (error) {
-                console.error('Fetch error:', error);
-                throw error;
-            }
+    try {
+        // Jangan gunakan mode: 'no-cors' karena kita perlu membaca response
+        const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const text = await response.text();
+        console.log('Response:', text);
+        
+        // Coba parse JSON
+        try {
+            const result = JSON.parse(text);
+            return result;
+        } catch (e) {
+            console.error('Parse error:', text);
+            // Jika bukan JSON, mungkin response sukses tapi bukan JSON
+            return { success: true, message: 'Data terkirim' };
+        }
+        
+    } catch (error) {
+        console.error('Fetch error:', error);
+        throw error;
+    }
+}
+
+async function fetchFromSheetGet(action) {
+    if (!isOnline) {
+        throw new Error('Tidak ada koneksi internet');
+    }
+
+    try {
+        const url = `${SCRIPT_URL}?action=${action}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const text = await response.text();
+        console.log('GET Response:', text);
+        
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            console.error('Parse error:', text);
+            throw new Error('Invalid JSON response');
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        throw error;
+    }
+}
+
+async function handleSubmit(e) {
+    e.preventDefault();
+    
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div><span>Menyimpan...</span>';
+
+    try {
+        if (!validateForm()) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Simpan ke Google Sheets</span>';
+            return;
         }
 
-        async function fetchFromSheetGet(action) {
-            // Untuk GET request (mengambil data)
-            if (!isOnline) {
-                throw new Error('Tidak ada koneksi internet');
-            }
-
-            try {
-                const url = `${SCRIPT_URL}?action=${action}`;
-                const response = await fetch(url);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const text = await response.text();
-                console.log('GET Response:', text);
-                
-                // Coba parse JSON
-                try {
-                    return JSON.parse(text);
-                } catch (e) {
-                    console.error('Parse error:', text);
-                    throw new Error('Invalid JSON response');
-                }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                throw error;
-            }
-        }
-
-        async function loadFromSheet() {
-            if (!isOnline) return;
-            
-            try {
-                console.log('Loading from sheet...');
-                showLoading(true);
-                
-                const result = await fetchFromSheetGet('getAll');
-                console.log('Load result:', result);
-                
-                if (result && result.success) {
-                    allGuests = result.data || [];
-                    saveToLocal('guests', allGuests);
-                    displayGuests();
-                    
-                    // Update count
-                    document.getElementById('guestCount').textContent = allGuests.length;
-                } else {
-                    console.warn('Failed to load data:', result);
-                    loadLocalData(); // Fallback ke lokal
-                }
-            } catch (error) {
-                console.error('Load error:', error);
-                showToast('Gagal memuat data: ' + error.message, 'error');
-                loadLocalData(); // Fallback ke lokal
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        async function updateStatsFromSheet() {
-            if (!isOnline) return;
-            
-            try {
-                const result = await fetchFromSheetGet('getStats');
-                if (result && result.success) {
-                    document.getElementById('totalTamu').textContent = result.total || 0;
-                    document.getElementById('todayTamu').textContent = result.today || 0;
-                }
-            } catch (error) {
-                console.error('Stats error:', error);
-            }
-        }
-
-        // ==================== HANDLE FORM ====================
-        async function handleSubmit(e) {
-            e.preventDefault();
-            
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<div class="spinner"></div><span>Menyimpan...</span>';
-
-            try {
-                if (!validateForm()) {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Simpan ke Google Sheets</span>';
-                    return;
-                }
-
-                // Ambil data form
-                const formData = {
-                    nama: document.getElementById('nama').value.trim(),
-                    instansi: document.getElementById('instansi').value.trim() || '-',
-                    email: document.getElementById('email').value.trim() || '-',
-                    telepon: document.getElementById('telepon').value.trim() || '-',
-                    keperluan: document.getElementById('keperluan').value,
-                    bertemu: document.getElementById('bertemu').value.trim() || '-',
-                    pesan: document.getElementById('pesan').value.trim() || '-',
-                    suhu: document.getElementById('suhu').checked ? 'Normal' : 'Tidak Dicek'
-                };
-
-                console.log('Form data:', formData);
-
-                // Proses foto
-                const fotoFile = document.getElementById('foto').files[0];
-                if (fotoFile) {
-                    if (!validatePhoto(fotoFile)) {
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Simpan ke Google Sheets</span>';
-                        return;
-                    }
-                    
-                    // Compress foto
-                    console.log('Compressing image...');
-                    formData.foto = await compressImage(fotoFile);
-                    console.log('Image compressed, length:', formData.foto.length);
-                }
-
-                // Buat object tamu untuk local
-                const guestData = {
-                    ...formData,
-                    id: generateId(),
-                    waktu: new Date().toISOString(),
-                    timestamp: Date.now()
-                };
-
-                if (isOnline) {
-                    // Simpan ke Google Sheets
-                    console.log('Saving to sheet...');
-                    await saveToSheet(guestData);
-                    showToast('Data berhasil disimpan ke Google Sheets!', 'success');
-                    
-                    // Refresh data
-                    await loadFromSheet();
-                    await updateStatsFromSheet();
-                } else {
-                    // Simpan ke pending queue
-                    pendingData.push(guestData);
-                    saveToLocal('pendingData', pendingData);
-                    
-                    // Simpan ke local guests
-                    allGuests.unshift(guestData);
-                    saveToLocal('guests', allGuests);
-                    
-                    showToast('Data disimpan lokal (offline mode)', 'warning');
-                    displayGuests();
-                    
-                    // Update count
-                    document.getElementById('guestCount').textContent = allGuests.length;
-                }
-
-                // Reset form
-                resetForm();
-                
-            } catch (error) {
-                console.error('Submit error:', error);
-                showToast('Error: ' + error.message, 'error');
-            } finally {
+        // Ambil data form
+        const formData = new FormData();
+        formData.append('nama', document.getElementById('nama').value.trim());
+        formData.append('instansi', document.getElementById('instansi').value.trim() || '-');
+        formData.append('email', document.getElementById('email').value.trim() || '-');
+        formData.append('telepon', document.getElementById('telepon').value.trim() || '-');
+        formData.append('keperluan', document.getElementById('keperluan').value);
+        formData.append('bertemu', document.getElementById('bertemu').value.trim() || '-');
+        formData.append('pesan', document.getElementById('pesan').value.trim() || '-');
+        formData.append('suhu', document.getElementById('suhu').checked ? 'Normal' : 'Tidak Dicek');
+        
+        // Tambahkan foto
+        const fotoFile = document.getElementById('foto').files[0];
+        if (fotoFile) {
+            if (!validatePhoto(fotoFile)) {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Simpan ke Google Sheets</span>';
+                return;
             }
+            
+            // Upload file langsung tanpa kompresi dulu
+            formData.append('foto', fotoFile);
         }
+
+        // Buat object tamu untuk local
+        const guestData = {
+            nama: document.getElementById('nama').value.trim(),
+            instansi: document.getElementById('instansi').value.trim() || '-',
+            email: document.getElementById('email').value.trim() || '-',
+            telepon: document.getElementById('telepon').value.trim() || '-',
+            keperluan: document.getElementById('keperluan').value,
+            bertemu: document.getElementById('bertemu').value.trim() || '-',
+            pesan: document.getElementById('pesan').value.trim() || '-',
+            suhu: document.getElementById('suhu').checked ? 'Normal' : 'Tidak Dicek',
+            id: generateId(),
+            waktu: new Date().toISOString(),
+            timestamp: Date.now()
+        };
+
+        if (isOnline) {
+            // Simpan ke Google Sheets
+            console.log('Saving to sheet...');
+            
+            // Kirim formData langsung
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            console.log('Save result:', result);
+            
+            if (result.success) {
+                showToast('Data berhasil disimpan ke Google Sheets!', 'success');
+                
+                // Update guestData dengan URL foto dari response
+                if (result.fotoUrl) {
+                    guestData.foto = result.fotoUrl;
+                }
+                
+                // Simpan ke local untuk ditampilkan
+                allGuests.unshift(guestData);
+                saveToLocal('guests', allGuests);
+                
+                // Refresh data
+                await loadFromSheet();
+                await updateStatsFromSheet();
+            } else {
+                throw new Error(result.error || 'Gagal menyimpan');
+            }
+        } else {
+            // Simpan ke pending queue
+            pendingData.push(guestData);
+            saveToLocal('pendingData', pendingData);
+            
+            // Simpan ke local guests
+            allGuests.unshift(guestData);
+            saveToLocal('guests', allGuests);
+            
+            showToast('Data disimpan lokal (offline mode)', 'warning');
+            displayGuests();
+            
+            // Update count
+            document.getElementById('guestCount').textContent = allGuests.length;
+        }
+
+        // Reset form
+        resetForm();
+        
+    } catch (error) {
+        console.error('Submit error:', error);
+        showToast('Error: ' + error.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Simpan ke Google Sheets</span>';
+    }
+}
 
         async function saveToSheet(guestData) {
             // Hapus field yang tidak perlu
