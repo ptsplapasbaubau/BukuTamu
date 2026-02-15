@@ -1,147 +1,62 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>BUKU TAMU LAPAS BAUBAU</title>
-    <style>
-        /* Gaya dasar untuk tampilan yang proposional dan bersih */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-        body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background-color: #f5f7fa;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 16px;
-        }
+<title>PTSP Mobile View</title>
 
-        .container {
-            width: 100%;
-            max-width: 1200px; /* Lebar maksimum untuk layar besar */
-            background-color: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            padding: 24px;
-            margin: 20px auto;
-        }
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #f5f6fa;
+        font-family: Arial, Helvetica, sans-serif;
+    }
 
-        /* Area untuk memuat konten dari URL */
-        #content-frame {
-            width: 100%;
-            min-height: 70vh; /* Tinggi proporsional terhadap viewport */
-            border: 1px solid #e0e0e0;
-            border-radius: 16px;
-            background-color: #ffffff;
-            transition: all 0.3s ease;
-        }
+    /* Container agar proporsional */
+    .frame-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #fff;
+    }
 
-        /* Opsi 1: Jika URL adalah aplikasi web, gunakan iframe */
-        .iframe-container {
-            position: relative;
-            width: 100%;
-            height: 0;
-            padding-bottom: 75%; /* Rasio aspek 4:3, bisa diubah */
-            overflow: hidden;
-            border-radius: 12px;
-        }
+    iframe {
+        border: none;
+        width: 100%;
+        height: 100%;
+    }
 
-        .iframe-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* Opsi 2: Untuk konten data (seperti teks/json), gunakan div */
-        .data-container {
-            width: 100%;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 12px;
-            font-size: clamp(1rem, 2vw, 1.2rem); /* Ukuran font proporsional */
-            line-height: 1.6;
-            word-wrap: break-word;
-        }
-
-        /* Judul dan elemen lain */
-        h1 {
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
-            margin-bottom: 16px;
-            color: #333;
-            font-weight: 600;
-        }
-
-        p {
-            margin-bottom: 20px;
-            color: #555;
-        }
-
-        /* Responsif untuk layar kecil */
-        @media (max-width: 600px) {
-            .container {
-                padding: 16px;
-                border-radius: 20px;
-            }
-        }
-    </style>
+    /* Loading overlay */
+    .loading {
+        position: absolute;
+        inset: 0;
+        background: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        color: #555;
+        z-index: 10;
+    }
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>BUKU TAMU LAPAS BAUBAU</h1>
-        <p>Berikut adalah tampilan proporsional otomatis dari sumber data:</p>
 
-        <!-- Pilih salah satu metode sesuai kebutuhan -->
+<div class="frame-container">
+    <div class="loading" id="loading">Memuat halaman...</div>
 
-        <!-- METODE 1: Gunakan iframe jika URL adalah aplikasi web utuh -->
-        <div class="iframe-container">
-            <iframe src="https://script.google.com/macros/s/AKfycby_fxgJlDaR6O8h6Ymq-tPj-d98vxhWj7iICXc5S924yybDMFiO2uNXr-pL_hbbwss1/exec" 
-                    title="Konten Aplikasi Web"
-                    loading="lazy"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
-            </iframe>
-        </div>
+    <iframe
+        src="https://script.google.com/macros/s/AKfycby_fxgJlDaR6O8h6Ymq-tPj-d98vxhWj7iICXc5S924yybDMFiO2uNXr-pL_hbbwss1/exec"
+        onload="document.getElementById('loading').style.display='none';">
+    </iframe>
+</div>
 
-        <!-- METODE 2: Alternatif untuk mengambil dan menampilkan data (misalnya JSON) 
-        <div id="dataDisplay" class="data-container">
-            Memuat data...
-        </div>
-
-        <script>
-            // Contoh kode untuk mengambil data dari URL (jika mengembalikan JSON)
-            async function loadData() {
-                try {
-                    const response = await fetch('URL_ANDA_DISINI');
-                    const data = await response.json();
-                    document.getElementById('dataDisplay').innerHTML = JSON.stringify(data, null, 2);
-                } catch (error) {
-                    document.getElementById('dataDisplay').innerHTML = 'Gagal memuat data.';
-                }
-            }
-            // loadData(); // Aktifkan jika URL mengembalikan JSON
-        </script>
-        -->
-
-        <!-- Catatan: Ganti URL pada iframe dengan URL Anda jika perlu -->
-    </div>
-
-    <script>
-        // JavaScript tambahan untuk penyesuaian dinamis jika diperlukan
-        // Misalnya, menyesuaikan tinggi iframe agar selalu proporsional
-        window.addEventListener('load', function() {
-            // Kode untuk menyesuaikan tinggi iframe secara otomatis bisa ditambahkan di sini
-            // Namun untuk keamanan, fitur ini terbatas karena kebijakan origin yang sama
-        });
-    </script>
 </body>
 </html>
