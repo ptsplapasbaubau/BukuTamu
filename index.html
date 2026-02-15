@@ -15,12 +15,12 @@
         }
 
         :root {
-            --primary: #0F9D58; /* Google Green */
+            --primary: #0F9D58;
             --primary-dark: #0B7C44;
             --primary-light: #34A853;
-            --secondary: #4285F4; /* Google Blue */
-            --danger: #EA4335; /* Google Red */
-            --warning: #FBBC05; /* Google Yellow */
+            --secondary: #4285F4;
+            --danger: #EA4335;
+            --warning: #FBBC05;
             --dark: #202124;
             --gray: #5F6368;
             --light: #F8F9FA;
@@ -39,7 +39,6 @@
             padding-bottom: 20px;
         }
 
-        /* Header */
         .app-header {
             background: var(--primary);
             color: white;
@@ -81,7 +80,6 @@
             opacity: 0.9;
         }
 
-        /* Stats Cards */
         .stats-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -121,7 +119,6 @@
             opacity: 0.8;
         }
 
-        /* Connection Status */
         .connection-status {
             display: flex;
             align-items: center;
@@ -147,12 +144,10 @@
             box-shadow: 0 0 10px var(--danger);
         }
 
-        /* Container */
         .container {
             padding: 20px 16px;
         }
 
-        /* Form Card */
         .form-card {
             background: var(--card);
             border-radius: 28px;
@@ -186,7 +181,6 @@
             font-weight: 600;
         }
 
-        /* Input Groups */
         .input-group {
             margin-bottom: 20px;
         }
@@ -237,7 +231,6 @@
             padding-right: 48px;
         }
 
-        /* Photo Upload */
         .photo-upload-area {
             position: relative;
             background: var(--light);
@@ -328,7 +321,6 @@
             backdrop-filter: blur(5px);
         }
 
-        /* Submit Button */
         .submit-btn {
             width: 100%;
             padding: 18px;
@@ -358,7 +350,6 @@
             transform: none;
         }
 
-        /* Guest List */
         .list-header {
             display: flex;
             align-items: center;
@@ -476,7 +467,6 @@
             color: var(--gray);
         }
 
-        /* Load More */
         .load-more {
             width: 100%;
             padding: 16px;
@@ -504,7 +494,6 @@
             cursor: not-allowed;
         }
 
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -525,7 +514,6 @@
             color: var(--gray);
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -585,7 +573,6 @@
             background: linear-gradient(transparent, rgba(0,0,0,0.5));
         }
 
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -620,7 +607,6 @@
         .toast.warning { background: var(--warning); color: var(--dark); }
         .toast.info { background: var(--secondary); }
 
-        /* Loading Skeleton */
         .skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
@@ -632,7 +618,6 @@
             100% { background-position: -200% 0; }
         }
 
-        /* Offline Banner */
         .offline-banner {
             background: var(--danger);
             color: white;
@@ -644,7 +629,6 @@
             z-index: 100;
         }
 
-        /* Test Connection Button */
         .test-connection {
             background: white;
             color: var(--primary);
@@ -684,7 +668,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Action Buttons */
         .action-buttons {
             display: flex;
             gap: 8px;
@@ -722,7 +705,7 @@
     </style>
 </head>
 <body>
-    <!-- Offline Banner (hidden by default) -->
+    <!-- Offline Banner -->
     <div id="offlineBanner" class="offline-banner" style="display: none;">
         <i class="fas fa-wifi-slash"></i> Kamu sedang offline. Data akan disimpan lokal.
     </div>
@@ -993,11 +976,9 @@
                 isOnline = false;
                 updateConnectionStatus();
                 
-                // Tampilkan banner offline
                 const banner = document.getElementById('offlineBanner');
                 banner.style.display = 'block';
                 
-                // Sembunyikan setelah 5 detik
                 setTimeout(() => {
                     banner.style.display = 'none';
                 }, 5000);
@@ -1013,55 +994,13 @@
                         console.log('Syncing pending data...');
                         syncPendingData();
                     }
-                    loadFromSheet(); // Refresh data
+                    loadFromSheet();
                     updateStatsFromSheet();
                 }
             }, CONFIG.SYNC_INTERVAL);
         }
 
         // ==================== KONEKSI GOOGLE SHEETS ====================
-        async function fetchFromSheet(action, data = {}) {
-            if (!isOnline) {
-                throw new Error('Tidak ada koneksi internet');
-            }
-
-            console.log('Sending to sheet:', action);
-
-            const formData = new FormData();
-            formData.append('action', action);
-            
-            Object.keys(data).forEach(key => {
-                if (data[key] !== undefined && data[key] !== null) {
-                    formData.append(key, data[key]);
-                }
-            });
-
-            try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const text = await response.text();
-                console.log('Response:', text.substring(0, 200));
-                
-                try {
-                    return JSON.parse(text);
-                } catch (e) {
-                    console.error('Parse error:', text.substring(0, 100));
-                    throw new Error('Invalid JSON response from server');
-                }
-                
-            } catch (error) {
-                console.error('Fetch error:', error);
-                throw error;
-            }
-        }
-
         async function fetchFromSheetGet(action) {
             if (!isOnline) {
                 throw new Error('Tidak ada koneksi internet');
@@ -1105,7 +1044,6 @@
                     saveToLocal('guests', allGuests);
                     displayGuests();
                     
-                    // Update count
                     document.getElementById('guestCount').textContent = allGuests.length;
                 } else {
                     console.warn('Failed to load data:', result);
@@ -1168,21 +1106,6 @@
                     console.log('Foto size:', (fotoFile.size / 1024 / 1024).toFixed(2), 'MB');
                 }
 
-                // Buat object tamu untuk local storage
-                const guestData = {
-                    nama: document.getElementById('nama').value.trim(),
-                    instansi: document.getElementById('instansi').value.trim() || '-',
-                    email: document.getElementById('email').value.trim() || '-',
-                    telepon: document.getElementById('telepon').value.trim() || '-',
-                    keperluan: document.getElementById('keperluan').value,
-                    bertemu: document.getElementById('bertemu').value.trim() || '-',
-                    pesan: document.getElementById('pesan').value.trim() || '-',
-                    suhu: document.getElementById('suhu').checked ? 'Normal' : 'Tidak Dicek',
-                    id: generateId(),
-                    waktu: new Date().toISOString(),
-                    timestamp: Date.now()
-                };
-
                 if (isOnline) {
                     // Simpan ke Google Sheets
                     console.log('Saving to sheet...');
@@ -1206,16 +1129,6 @@
                     if (result.success) {
                         showToast('✅ Data berhasil disimpan ke Google Sheets & Drive!', 'success');
                         
-                        // Update guestData dengan URL foto dari response
-                        if (result.fotoUrl) {
-                            guestData.foto = result.fotoUrl;
-                            console.log('Foto URL:', result.fotoUrl);
-                        }
-                        
-                        // Simpan ke local untuk ditampilkan
-                        allGuests.unshift(guestData);
-                        saveToLocal('guests', allGuests);
-                        
                         // Refresh data
                         await loadFromSheet();
                         await updateStatsFromSheet();
@@ -1223,19 +1136,35 @@
                         throw new Error(result.error || 'Gagal menyimpan');
                     }
                 } else {
-                    // Simpan ke pending queue
-                    pendingData.push(guestData);
-                    saveToLocal('pendingData', pendingData);
+                    // Simpan ke pending queue (offline mode)
+                    showToast('📱 Mode offline - Data akan disinkronkan nanti', 'warning');
                     
-                    // Simpan ke local guests
-                    allGuests.unshift(guestData);
-                    saveToLocal('guests', allGuests);
-                    
-                    showToast('📱 Data disimpan lokal (offline mode)', 'warning');
-                    displayGuests();
-                    
-                    // Update count
-                    document.getElementById('guestCount').textContent = allGuests.length;
+                    // Baca file foto sebagai base64 untuk disimpan di localStorage
+                    const reader = new FileReader();
+                    reader.onload = function(readerEvent) {
+                        const guestData = {
+                            nama: document.getElementById('nama').value.trim(),
+                            instansi: document.getElementById('instansi').value.trim() || '-',
+                            email: document.getElementById('email').value.trim() || '-',
+                            telepon: document.getElementById('telepon').value.trim() || '-',
+                            keperluan: document.getElementById('keperluan').value,
+                            bertemu: document.getElementById('bertemu').value.trim() || '-',
+                            pesan: document.getElementById('pesan').value.trim() || '-',
+                            suhu: document.getElementById('suhu').checked ? 'Normal' : 'Tidak Dicek',
+                            fotoBase64: readerEvent.target.result,
+                            id: generateId(),
+                            waktu: new Date().toISOString(),
+                            timestamp: Date.now()
+                        };
+                        
+                        pendingData.push(guestData);
+                        saveToLocal('pendingData', pendingData);
+                        
+                        // Reset form
+                        resetForm();
+                    };
+                    reader.readAsDataURL(fotoFile);
+                    return; // Exit early karena async
                 }
 
                 // Reset form
@@ -1272,8 +1201,11 @@
                     formData.append('pesan', data.pesan);
                     formData.append('suhu', data.suhu);
                     
-                    // Note: Foto tidak bisa di-sync karena hanya URL yang tersimpan
-                    // Ini adalah keterbatasan mode offline
+                    // Konversi base64 ke file blob
+                    if (data.fotoBase64) {
+                        const blob = dataURLtoBlob(data.fotoBase64);
+                        formData.append('foto', blob, 'foto.jpg');
+                    }
                     
                     const response = await fetch(SCRIPT_URL, {
                         method: 'POST',
@@ -1303,6 +1235,19 @@
             }
         }
 
+        // Helper: konversi dataURL ke Blob
+        function dataURLtoBlob(dataURL) {
+            const arr = dataURL.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], { type: mime });
+        }
+
         // ==================== VALIDASI & UTILITAS ====================
         function validateForm() {
             const nama = document.getElementById('nama').value.trim();
@@ -1324,30 +1269,16 @@
                 return false;
             }
             
-            // Validasi ukuran foto 10MB
             if (foto.size > CONFIG.MAX_PHOTO_SIZE) {
                 showToast(`Foto maksimal 10MB (ukuran saat ini: ${(foto.size / 1024 / 1024).toFixed(2)}MB)`, 'error');
                 return false;
             }
             
-            // Validasi tipe file
             if (!CONFIG.ALLOWED_TYPES.includes(foto.type)) {
                 showToast('Format harus JPG/PNG', 'error');
                 return false;
             }
             
-            return true;
-        }
-
-        function validatePhoto(file) {
-            if (file.size > CONFIG.MAX_PHOTO_SIZE) {
-                showToast(`Foto maksimal ${CONFIG.MAX_PHOTO_SIZE/1024/1024}MB`, 'error');
-                return false;
-            }
-            if (!CONFIG.ALLOWED_TYPES.includes(file.type)) {
-                showToast('Format harus JPG/PNG', 'error');
-                return false;
-            }
             return true;
         }
 
@@ -1417,25 +1348,25 @@
         function createGuestCard(guest) {
             const waktu = formatWaktu(guest.waktu || guest.timestamp);
             
-            // Jika guest.foto adalah URL Google Drive, tampilkan
-            let fotoSrc = guest.foto || 'https://via.placeholder.com/200x200?text=No+Photo';
+            // Gunakan URL foto dari spreadsheet
+            let fotoSrc = guest['URL Foto'] || guest.foto || 'https://via.placeholder.com/200x200?text=No+Photo';
             
-            // Untuk URL Google Drive, perlu format khusus untuk thumbnail
-            if (fotoSrc.includes('drive.google.com')) {
-                // Ekstrak file ID dari URL
-                const fileIdMatch = fotoSrc.match(/[-\w]{25,}/);
-                if (fileIdMatch) {
-                    fotoSrc = `https://drive.google.com/thumbnail?id=${fileIdMatch[0]}&sz=w400`;
+            // Untuk URL Google Drive, gunakan thumbnail untuk preview lebih cepat
+            if (fotoSrc.includes('drive.google.com/uc')) {
+                const fileId = fotoSrc.match(/id=([^&]+)/);
+                if (fileId) {
+                    fotoSrc = `https://drive.google.com/thumbnail?id=${fileId[1]}&sz=w400`;
                 }
             }
             
-            const nama = escapeHtml(guest.nama || 'Unknown');
-            const instansi = escapeHtml(guest.instansi || '-');
-            const keperluan = escapeHtml(guest.keperluan || '-');
-            const bertemu = guest.bertemu && guest.bertemu !== '-' ? escapeHtml(guest.bertemu) : null;
+            const nama = escapeHtml(guest.Nama || guest.nama || 'Unknown');
+            const instansi = escapeHtml(guest.Instansi || guest.instansi || '-');
+            const keperluan = escapeHtml(guest.Keperluan || guest.keperluan || '-');
+            const bertemu = guest.Bertemu || guest.bertemu;
+            const bertemuDisplay = bertemu && bertemu !== '-' ? escapeHtml(bertemu) : null;
             
             return `
-                <div class="guest-card" onclick="showGuestDetail('${guest.id || ''}')">
+                <div class="guest-card" onclick="showGuestDetail('${guest.ID || guest.id || ''}')">
                     <div class="guest-photo-row">
                         <div class="guest-thumb" onclick="event.stopPropagation(); openPhotoModal('${fotoSrc}', '${nama}')">
                             <img src="${fotoSrc}" alt="${nama}" 
@@ -1458,8 +1389,8 @@
                     </div>
                     <div class="guest-footer">
                         <span><i class="fas fa-clock"></i> ${waktu}</span>
-                        ${bertemu ? `
-                            <span><i class="fas fa-user-tie"></i> ${bertemu}</span>
+                        ${bertemuDisplay ? `
+                            <span><i class="fas fa-user-tie"></i> ${bertemuDisplay}</span>
                         ` : ''}
                     </div>
                 </div>
@@ -1498,21 +1429,18 @@
             const file = e.target.files[0];
             if (!file) return;
 
-            // Validasi ukuran
             if (file.size > CONFIG.MAX_PHOTO_SIZE) {
                 showToast(`Foto maksimal 10MB (${(file.size / 1024 / 1024).toFixed(2)}MB)`, 'error');
                 e.target.value = '';
                 return;
             }
 
-            // Tampilkan preview
             const reader = new FileReader();
             reader.onload = (e) => {
                 document.getElementById('previewImg').src = e.target.result;
                 document.getElementById('uploadPlaceholder').style.display = 'none';
                 document.getElementById('photoPreview').style.display = 'block';
                 
-                // Tampilkan info ukuran
                 const preview = document.getElementById('photoPreview');
                 const oldInfo = preview.querySelector('.photo-size-info');
                 if (oldInfo) oldInfo.remove();
@@ -1537,14 +1465,14 @@
         }
 
         function showGuestDetail(id) {
-            const guest = allGuests.find(g => g.id === id);
+            const guest = allGuests.find(g => (g.ID || g.id) === id);
             if (!guest) return;
 
-            let message = `👤 ${guest.nama || 'Unknown'}\n`;
-            message += `🏢 ${guest.instansi || '-'}\n`;
-            message += `📋 ${guest.keperluan || '-'}\n`;
-            if (guest.bertemu && guest.bertemu !== '-') message += `👔 Bertemu: ${guest.bertemu}\n`;
-            if (guest.pesan && guest.pesan !== '-') message += `💬 ${guest.pesan}\n`;
+            let message = `👤 ${guest.Nama || guest.nama || 'Unknown'}\n`;
+            message += `🏢 ${guest.Instansi || guest.instansi || '-'}\n`;
+            message += `📋 ${guest.Keperluan || guest.keperluan || '-'}\n`;
+            if (guest.Bertemu || guest.bertemu) message += `👔 Bertemu: ${guest.Bertemu || guest.bertemu}\n`;
+            if (guest.Pesan || guest.pesan) message += `💬 ${guest.Pesan || guest.pesan}\n`;
             
             showToast(message, 'info', 5000);
         }
