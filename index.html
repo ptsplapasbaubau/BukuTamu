@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Buku Tamu • LAPAS BAUBAU</title>
+    <title>Buku Tamu • Google Drive</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* [SAME CSS FROM PREVIOUS VERSION] */
         * {
             margin: 0;
             padding: 0;
@@ -28,7 +27,6 @@
             --card: #FFFFFF;
             --bg: #F1F3F4;
             --shadow: 0 4px 6px rgba(0,0,0,0.1);
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
         }
 
         body {
@@ -43,18 +41,16 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             padding: 20px 16px 24px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            box-shadow: var(--shadow);
             border-bottom-left-radius: 28px;
             border-bottom-right-radius: 28px;
+            box-shadow: var(--shadow);
         }
 
         .header-content {
             display: flex;
             align-items: center;
             gap: 12px;
+            margin-bottom: 16px;
         }
 
         .header-icon {
@@ -66,7 +62,6 @@
             align-items: center;
             justify-content: center;
             font-size: 28px;
-            backdrop-filter: blur(10px);
         }
 
         .header-text h1 {
@@ -81,27 +76,24 @@
         }
 
         .drive-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 6px 12px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 16px;
             border-radius: 30px;
-            font-size: 12px;
+            font-size: 13px;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            margin-top: 12px;
-            backdrop-filter: blur(10px);
+            gap: 8px;
+            margin-bottom: 16px;
         }
 
         .stats-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-top: 16px;
         }
 
         .stat-card {
             background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 14px;
             display: flex;
@@ -123,37 +115,11 @@
         .stat-info h3 {
             font-size: 20px;
             font-weight: 700;
-            line-height: 1.2;
         }
 
         .stat-info span {
             font-size: 12px;
             opacity: 0.8;
-        }
-
-        .connection-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 12px;
-            font-size: 13px;
-            background: rgba(0,0,0,0.1);
-            padding: 8px 16px;
-            border-radius: 30px;
-            width: fit-content;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #4CAF50;
-            box-shadow: 0 0 10px #4CAF50;
-        }
-
-        .status-dot.offline {
-            background: var(--danger);
-            box-shadow: 0 0 10px var(--danger);
         }
 
         .container {
@@ -164,7 +130,7 @@
             background: var(--card);
             border-radius: 28px;
             padding: 24px;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow);
             margin-bottom: 24px;
             border: 1px solid var(--border);
         }
@@ -209,7 +175,6 @@
 
         .input-label i {
             color: var(--primary);
-            font-size: 14px;
         }
 
         .required {
@@ -225,7 +190,6 @@
             border-radius: 20px;
             font-size: 16px;
             transition: all 0.2s;
-            font-family: inherit;
         }
 
         .input-field:focus {
@@ -317,7 +281,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(5px);
             cursor: pointer;
         }
 
@@ -387,13 +350,8 @@
             background: var(--card);
             border-radius: 24px;
             overflow: hidden;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow);
             border: 1px solid var(--border);
-            transition: transform 0.2s;
-        }
-
-        .guest-card:active {
-            transform: scale(0.98);
         }
 
         .guest-photo-row {
@@ -410,7 +368,7 @@
             overflow: hidden;
             background: var(--light);
             border: 3px solid white;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow);
             cursor: pointer;
         }
 
@@ -435,7 +393,6 @@
 
         .guest-name i {
             color: var(--primary);
-            font-size: 14px;
         }
 
         .guest-instansi {
@@ -487,7 +444,6 @@
             gap: 8px;
             margin-top: 16px;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .load-more:active {
@@ -499,7 +455,6 @@
             padding: 40px 20px;
             background: var(--card);
             border-radius: 28px;
-            border: 1px solid var(--border);
         }
 
         .empty-state i {
@@ -507,11 +462,6 @@
             color: var(--primary-light);
             margin-bottom: 16px;
             opacity: 0.5;
-        }
-
-        .empty-state p {
-            font-size: 16px;
-            color: var(--gray);
         }
 
         .modal {
@@ -522,7 +472,6 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(10px);
             z-index: 1000;
         }
 
@@ -556,9 +505,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
             cursor: pointer;
-            z-index: 1001;
         }
 
         .modal-caption {
@@ -588,7 +535,6 @@
             box-shadow: var(--shadow);
             z-index: 1002;
             animation: slideUp 0.3s;
-            backdrop-filter: blur(10px);
         }
 
         @keyframes slideUp {
@@ -606,30 +552,6 @@
         .toast.error { background: var(--danger); }
         .toast.warning { background: var(--warning); color: var(--dark); }
 
-        .drive-info {
-            font-size: 11px;
-            color: var(--gray);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-top: 4px;
-        }
-
-        .drive-info i {
-            color: var(--primary);
-        }
-
-        .offline-banner {
-            background: var(--danger);
-            color: white;
-            text-align: center;
-            padding: 8px;
-            font-size: 13px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
         .spinner {
             width: 20px;
             height: 20px;
@@ -642,31 +564,16 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-        }
-
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
     </style>
 </head>
 <body>
-    <div id="offlineBanner" class="offline-banner" style="display: none;">
-        <i class="fas fa-wifi-slash"></i> Kamu sedang offline. Data akan disimpan lokal.
-    </div>
-
     <div class="app-header">
         <div class="header-content">
             <div class="header-icon">
                 <i class="fab fa-google-drive"></i>
             </div>
             <div class="header-text">
-                <h1>Buku Tamu</h1>
+                <h1>Buku Tamu Digital</h1>
                 <p>Google Drive Integration</p>
             </div>
         </div>
@@ -695,11 +602,6 @@
                     <span>Hari Ini</span>
                 </div>
             </div>
-        </div>
-
-        <div class="connection-status" id="connectionStatus">
-            <span class="status-dot" id="statusDot"></span>
-            <span id="statusText">Terhubung ke Google Drive</span>
         </div>
     </div>
 
@@ -779,8 +681,8 @@
                     <div class="input-label">
                         <i class="fas fa-camera"></i>
                         Foto Selfie <span class="required">*</span>
-                        <span class="drive-info">
-                            <i class="fab fa-google-drive"></i> Akan disimpan di Drive
+                        <span style="margin-left: 8px; font-size: 11px; color: var(--gray);">
+                            <i class="fab fa-google-drive"></i> Akan simpan di Drive
                         </span>
                     </div>
                     <div class="photo-upload-area" id="photoArea">
@@ -822,9 +724,14 @@
             <span class="guest-count" id="guestCount">0</span>
         </div>
 
-        <div class="guests-container" id="guestsContainer"></div>
+        <div class="guests-container" id="guestsContainer">
+            <div class="empty-state">
+                <i class="fas fa-users-slash"></i>
+                <p>Belum ada data tamu</p>
+            </div>
+        </div>
 
-        <button class="load-more" id="loadMoreBtn" onclick="loadMore()">
+        <button class="load-more" id="loadMoreBtn" onclick="loadMore()" style="display: none;">
             <i class="fas fa-sync-alt"></i>
             <span>Muat Lebih Banyak</span>
         </button>
@@ -844,31 +751,18 @@
 
     <script>
         // ==================== KONFIGURASI ====================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_fxgJlDaR6O8h6Ymq-tPj-d98vxhWj7iICXc5S924yybDMFiO2uNXr-pL_hbbwss1/exec'; // GANTI DENGAN URL ANDA
-        const DRIVE_FOLDER_ID = '12ZlPWUQv_93BJs3Az6yJcYJqRMg6ibK8'; // Folder Google Drive
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_fxgJlDaR6O8h6Ymq-tPj-d98vxhWj7iICXc5S924yybDMFiO2uNXr-pL_hbbwss1/exec';
+        const ITEMS_PER_PAGE = 5;
         
-        const CONFIG = {
-            MAX_PHOTO_SIZE: 2 * 1024 * 1024, // 2MB
-            ALLOWED_TYPES: ['image/jpeg', 'image/png', 'image/jpg'],
-            ITEMS_PER_PAGE: 5,
-            SYNC_INTERVAL: 30000
-        };
-
         // ==================== STATE ====================
         let allGuests = [];
         let currentPage = 1;
-        let isLoading = false;
-        let isOnline = navigator.onLine;
-        let pendingData = JSON.parse(localStorage.getItem('pendingData')) || [];
-        let syncInterval;
 
         // ==================== INISIALISASI ====================
         document.addEventListener('DOMContentLoaded', () => {
-            checkConnection();
-            loadLocalData();
             setupEventListeners();
-            setupNetworkListeners();
-            startSyncTimer();
+            testConnection();
+            loadFromSheet();
         });
 
         function setupEventListeners() {
@@ -879,106 +773,32 @@
             document.getElementById('foto').addEventListener('change', handlePhotoSelect);
         }
 
-        function setupNetworkListeners() {
-            window.addEventListener('online', () => {
-                isOnline = true;
-                updateConnectionStatus();
-                syncPendingData();
-                loadFromSheet();
-                showToast('Koneksi tersambung!', 'success');
-            });
-            
-            window.addEventListener('offline', () => {
-                isOnline = false;
-                updateConnectionStatus();
-                document.getElementById('offlineBanner').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('offlineBanner').style.display = 'none';
-                }, 5000);
-                showToast('Offline mode - Data disimpan lokal', 'warning');
-            });
-        }
-
-        function startSyncTimer() {
-            syncInterval = setInterval(() => {
-                if (isOnline && pendingData.length > 0) {
-                    syncPendingData();
-                }
-                if (isOnline) {
-                    loadFromSheet();
-                }
-            }, CONFIG.SYNC_INTERVAL);
-        }
-
-        // ==================== API CALLS ====================
-        async function fetchFromSheet(action, data = {}) {
-            if (!isOnline) {
-                throw new Error('Tidak ada koneksi internet');
-            }
-
-            const formData = new FormData();
-            formData.append('action', action);
-            
-            Object.keys(data).forEach(key => {
-                formData.append(key, data[key]);
-            });
-
+        // ==================== TEST KONEKSI ====================
+        async function testConnection() {
             try {
+                const formData = new FormData();
+                formData.append('action', 'test');
+                
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
                     body: formData
                 });
                 
                 const result = await response.json();
-                
-                if (!result.success) {
-                    throw new Error(result.error || 'Unknown error');
-                }
-                
-                return result;
-            } catch (error) {
-                console.error('Sheet error:', error);
-                throw error;
-            }
-        }
-
-        async function loadFromSheet() {
-            if (!isOnline) return;
-            
-            try {
-                showLoading(true);
-                const result = await fetchFromSheet('getAll');
+                console.log('Test connection:', result);
                 
                 if (result.success) {
-                    allGuests = result.data;
-                    saveToLocal('guests', allGuests);
-                    displayGuests();
-                    updateStatsFromSheet();
+                    showToast('✅ Terhubung ke Google Drive', 'success');
+                } else {
+                    showToast('⚠️ ' + (result.error || 'Koneksi bermasalah'), 'warning');
                 }
             } catch (error) {
-                console.error('Load error:', error);
-                loadLocalData();
-            } finally {
-                showLoading(false);
+                console.error('Connection test failed:', error);
+                showToast('❌ Gagal terhubung ke server', 'error');
             }
         }
 
-        async function updateStatsFromSheet() {
-            if (!isOnline) return;
-            
-            try {
-                const result = await fetchFromSheet('getStats');
-                if (result.success) {
-                    document.getElementById('totalTamu').textContent = result.total;
-                    document.getElementById('todayTamu').textContent = result.today;
-                    document.getElementById('guestCount').textContent = result.total;
-                }
-            } catch (error) {
-                console.error('Stats error:', error);
-            }
-        }
-
-        // ==================== HANDLE FORM ====================
+        // ==================== HANDLE SUBMIT ====================
         async function handleSubmit(e) {
             e.preventDefault();
             
@@ -987,206 +807,120 @@
             btn.innerHTML = '<div class="spinner"></div><span>Menyimpan ke Drive...</span>';
 
             try {
-                if (!validateForm()) return;
-
-                // Generate ID untuk tamu (sekaligus nama file)
-                const guestId = generateId();
-
-                // Ambil data form
-                const formData = {
-                    nama: document.getElementById('nama').value,
-                    instansi: document.getElementById('instansi').value || '-',
-                    email: document.getElementById('email').value || '-',
-                    telepon: document.getElementById('telepon').value || '-',
-                    keperluan: document.getElementById('keperluan').value,
-                    bertemu: document.getElementById('bertemu').value || '-',
-                    pesan: document.getElementById('pesan').value || '-',
-                    suhu: document.getElementById('suhu').checked ? 'Normal' : 'Tidak Dicek'
-                };
-
-                // Proses foto
+                // Validasi
+                const nama = document.getElementById('nama').value.trim();
+                const keperluan = document.getElementById('keperluan').value;
                 const fotoFile = document.getElementById('foto').files[0];
-                if (fotoFile) {
-                    if (!validatePhoto(fotoFile)) return;
-                    
-                    // Compress foto sebelum diupload
-                    const fotoBase64 = await compressImage(fotoFile);
-                    formData.foto = fotoBase64;
+
+                if (!nama) {
+                    showToast('Nama harus diisi', 'warning');
+                    return;
+                }
+                if (!keperluan) {
+                    showToast('Pilih keperluan', 'warning');
+                    return;
+                }
+                if (!fotoFile) {
+                    showToast('Ambil foto selfie', 'warning');
+                    return;
                 }
 
-                // Buat object tamu
-                const guestData = {
-                    ...formData,
-                    id: guestId,
-                    waktu: new Date().toISOString(),
-                    timestamp: Date.now()
-                };
+                // Validasi ukuran foto
+                if (fotoFile.size > 2 * 1024 * 1024) {
+                    showToast('Foto maksimal 2MB', 'error');
+                    return;
+                }
 
-                if (isOnline) {
-                    // Simpan ke Google Sheets & Drive
-                    const result = await saveToSheet(guestData);
+                showToast('Mengirim data...', 'info');
+
+                // Konversi foto ke Base64
+                const fotoBase64 = await fileToBase64(fotoFile);
+                console.log('Foto Base64 length:', fotoBase64.length);
+
+                // Siapkan data
+                const formData = new FormData();
+                formData.append('action', 'add');
+                formData.append('nama', nama);
+                formData.append('instansi', document.getElementById('instansi').value || '-');
+                formData.append('email', document.getElementById('email').value || '-');
+                formData.append('telepon', document.getElementById('telepon').value || '-');
+                formData.append('keperluan', keperluan);
+                formData.append('bertemu', document.getElementById('bertemu').value || '-');
+                formData.append('pesan', document.getElementById('pesan').value || '-');
+                formData.append('suhu', document.getElementById('suhu').checked ? 'Normal' : 'Tidak Dicek');
+                formData.append('foto', fotoBase64);
+
+                // Kirim ke server
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                console.log('Server response:', result);
+
+                if (result.success) {
+                    showToast(`✅ Data tersimpan! ID: ${result.id}`, 'success');
                     
-                    if (result.success) {
-                        showToast(`Foto tersimpan di Drive dengan ID: ${guestId}`, 'success');
-                        
-                        // Refresh data
-                        await loadFromSheet();
-                    }
+                    // Reset form
+                    document.getElementById('guestForm').reset();
+                    removePhoto();
+                    
+                    // Reload data
+                    setTimeout(() => {
+                        loadFromSheet();
+                    }, 1000);
                 } else {
-                    // Simpan ke pending queue
-                    pendingData.push(guestData);
-                    saveToLocal('pendingData', pendingData);
-                    
-                    // Simpan ke local guests
-                    allGuests.unshift(guestData);
-                    saveToLocal('guests', allGuests);
-                    
-                    showToast('Data disimpan lokal (offline mode)', 'warning');
-                    displayGuests();
+                    throw new Error(result.error || 'Gagal menyimpan');
                 }
 
-                // Reset form
-                resetForm();
-                
             } catch (error) {
-                showToast('Error: ' + error.message, 'error');
+                console.error('Submit error:', error);
+                showToast('❌ Error: ' + error.message, 'error');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fab fa-google-drive"></i><span>Simpan ke Google Drive</span>';
             }
         }
 
-        async function saveToSheet(guestData) {
-            const dataToSend = {
-                nama: guestData.nama,
-                instansi: guestData.instansi,
-                email: guestData.email,
-                telepon: guestData.telepon,
-                keperluan: guestData.keperluan,
-                bertemu: guestData.bertemu,
-                pesan: guestData.pesan,
-                foto: guestData.foto || '',
-                suhu: guestData.suhu
-            };
-
-            return await fetchFromSheet('add', dataToSend);
-        }
-
-        async function syncPendingData() {
-            if (!isOnline || pendingData.length === 0) return;
-
-            showToast(`Menyinkronkan ${pendingData.length} data ke Drive...`, 'info');
-
-            for (const data of pendingData) {
-                try {
-                    await saveToSheet(data);
-                } catch (error) {
-                    console.error('Sync error:', error);
-                    return;
-                }
-            }
-
-            pendingData = [];
-            saveToLocal('pendingData', pendingData);
-            
-            showToast('Semua data berhasil disinkronkan ke Drive!', 'success');
-            await loadFromSheet();
-        }
-
-        // ==================== VALIDASI & UTILITAS ====================
-        function validateForm() {
-            const nama = document.getElementById('nama').value.trim();
-            const keperluan = document.getElementById('keperluan').value;
-            const foto = document.getElementById('foto').files[0];
-
-            if (!nama) {
-                showToast('Nama harus diisi', 'warning');
-                return false;
-            }
-            if (!keperluan) {
-                showToast('Pilih keperluan', 'warning');
-                return false;
-            }
-            if (!foto) {
-                showToast('Ambil foto selfie', 'warning');
-                return false;
-            }
-            return true;
-        }
-
-        function validatePhoto(file) {
-            if (file.size > CONFIG.MAX_PHOTO_SIZE) {
-                showToast('Foto maksimal 2MB', 'error');
-                return false;
-            }
-            if (!CONFIG.ALLOWED_TYPES.includes(file.type)) {
-                showToast('Format harus JPG/PNG', 'error');
-                return false;
-            }
-            return true;
-        }
-
-        async function compressImage(file) {
-            return new Promise((resolve) => {
+        // ==================== FILE TO BASE64 ====================
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
                 const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
                 reader.readAsDataURL(file);
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        
-                        // Resize jika terlalu besar
-                        const maxSize = 1024;
-                        if (width > maxSize || height > maxSize) {
-                            if (width > height) {
-                                height = (height / width) * maxSize;
-                                width = maxSize;
-                            } else {
-                                width = (width / height) * maxSize;
-                                height = maxSize;
-                            }
-                        }
-                        
-                        canvas.width = width;
-                        canvas.height = height;
-                        
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        
-                        // Kompres ke JPEG quality 0.7
-                        const compressed = canvas.toDataURL('image/jpeg', 0.7);
-                        resolve(compressed);
-                    };
-                };
             });
         }
 
-        // ==================== LOCAL STORAGE ====================
-        function loadLocalData() {
-            const localGuests = localStorage.getItem('guests');
-            if (localGuests) {
-                allGuests = JSON.parse(localGuests);
-                displayGuests();
+        // ==================== LOAD DATA ====================
+        async function loadFromSheet() {
+            try {
+                const formData = new FormData();
+                formData.append('action', 'getAll');
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    allGuests = result.data || [];
+                    displayGuests();
+                    updateStats();
+                }
+            } catch (error) {
+                console.error('Load error:', error);
             }
-            
-            const pending = localStorage.getItem('pendingData');
-            if (pending) {
-                pendingData = JSON.parse(pending);
-            }
-        }
-
-        function saveToLocal(key, data) {
-            localStorage.setItem(key, JSON.stringify(data));
         }
 
         // ==================== DISPLAY GUESTS ====================
         function displayGuests() {
             const container = document.getElementById('guestsContainer');
             const start = 0;
-            const end = currentPage * CONFIG.ITEMS_PER_PAGE;
+            const end = currentPage * ITEMS_PER_PAGE;
             const guestsToShow = allGuests.slice(start, end);
 
             if (guestsToShow.length === 0) {
@@ -1216,9 +950,8 @@
         }
 
         function createGuestCard(guest) {
-            const waktu = formatWaktu(guest.waktu);
-            const fotoUrl = guest.Foto || 'https://via.placeholder.com/200x200?text=No+Photo';
-            const photoId = guest.ID || 'unknown';
+            const waktu = formatWaktu(guest.Timestamp);
+            const fotoUrl = guest.FotoURL || 'https://via.placeholder.com/200x200?text=No+Photo';
             
             return `
                 <div class="guest-card">
@@ -1239,24 +972,20 @@
                                 <i class="fas fa-tag"></i>
                                 ${escapeHtml(guest.Keperluan)}
                             </span>
-                            <div class="drive-info">
-                                <i class="fab fa-google-drive"></i>
-                                ID: ${photoId}
-                            </div>
                         </div>
                     </div>
                     <div class="guest-footer">
                         <span><i class="fas fa-clock"></i> ${waktu}</span>
-                        ${guest.Bertemu && guest.Bertemu !== '-' ? `
-                            <span><i class="fas fa-user-tie"></i> ${escapeHtml(guest.Bertemu)}</span>
-                        ` : ''}
+                        ${guest.Bertemu && guest.Bertemu !== '-' ? 
+                            `<span><i class="fas fa-user-tie"></i> ${escapeHtml(guest.Bertemu)}</span>` : ''}
                     </div>
                 </div>
             `;
         }
 
-        function formatWaktu(isoString) {
-            const date = new Date(isoString);
+        function formatWaktu(timestamp) {
+            if (!timestamp) return '-';
+            const date = new Date(timestamp);
             const now = new Date();
             const diff = Math.floor((now - date) / 1000);
 
@@ -1273,12 +1002,30 @@
             return div.innerHTML;
         }
 
+        // ==================== UPDATE STATS ====================
+        function updateStats() {
+            document.getElementById('totalTamu').textContent = allGuests.length;
+            document.getElementById('guestCount').textContent = allGuests.length;
+            
+            // Hitung tamu hari ini
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const todayCount = allGuests.filter(guest => {
+                const guestDate = new Date(guest.Timestamp);
+                return guestDate >= today;
+            }).length;
+            
+            document.getElementById('todayTamu').textContent = todayCount;
+        }
+
         // ==================== UI FUNCTIONS ====================
         function handlePhotoSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
 
-            if (!validatePhoto(file)) {
+            if (file.size > 2 * 1024 * 1024) {
+                showToast('Foto maksimal 2MB', 'error');
                 e.target.value = '';
                 return;
             }
@@ -1298,11 +1045,6 @@
             document.getElementById('photoPreview').style.display = 'none';
         }
 
-        function resetForm() {
-            document.getElementById('guestForm').reset();
-            removePhoto();
-        }
-
         function openPhotoModal(src, caption) {
             document.getElementById('modalImg').src = src;
             document.getElementById('modalCaption').textContent = caption;
@@ -1318,39 +1060,14 @@
             displayGuests();
         }
 
-        function showLoading(show) {
-            const container = document.getElementById('guestsContainer');
-            if (show) {
-                container.innerHTML = `
-                    <div class="skeleton" style="height: 150px; border-radius: 24px; margin-bottom: 16px;"></div>
-                    <div class="skeleton" style="height: 150px; border-radius: 24px; margin-bottom: 16px;"></div>
-                `;
-            }
-        }
-
-        function checkConnection() {
-            isOnline = navigator.onLine;
-            updateConnectionStatus();
-        }
-
-        function updateConnectionStatus() {
-            const dot = document.getElementById('statusDot');
-            const text = document.getElementById('statusText');
-            
-            if (isOnline) {
-                dot.className = 'status-dot';
-                text.textContent = 'Terhubung ke Google Drive';
-            } else {
-                dot.className = 'status-dot offline';
-                text.textContent = 'Offline - Data disimpan lokal';
-            }
-        }
-
         function showToast(message, type = 'info', duration = 3000) {
             const toast = document.getElementById('toast');
             toast.className = `toast ${type}`;
             toast.innerHTML = `
-                <i class="fas ${getIcon(type)}"></i>
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 
+                                 type === 'error' ? 'fa-exclamation-circle' : 
+                                 type === 'warning' ? 'fa-exclamation-triangle' : 
+                                 'fa-info-circle'}"></i>
                 <span>${message}</span>
             `;
             toast.style.display = 'flex';
@@ -1359,35 +1076,6 @@
                 toast.style.display = 'none';
             }, duration);
         }
-
-        function getIcon(type) {
-            const icons = {
-                success: 'fa-check-circle',
-                error: 'fa-exclamation-circle',
-                warning: 'fa-exclamation-triangle',
-                info: 'fa-info-circle'
-            };
-            return icons[type] || 'fa-info-circle';
-        }
-
-        function generateId() {
-            return 'TAMU_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
-        }
-
-        // ==================== EXPORT FUNCTIONS ====================
-        window.viewDriveFolder = function() {
-            window.open(`https://drive.google.com/drive/folders/${DRIVE_FOLDER_ID}`, '_blank');
-        };
-
-        window.exportToJSON = function() {
-            const dataStr = JSON.stringify(allGuests, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `buku_tamu_${new Date().toISOString().slice(0,10)}.json`;
-            a.click();
-        };
     </script>
 </body>
 </html>
