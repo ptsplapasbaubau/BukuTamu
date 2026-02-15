@@ -17,7 +17,7 @@ html, body {
 #appFrame {
   border: 0;
   width: 100vw;
-  height: 100dvh; /* kunci utama HP modern */
+  height: 100dvh;
 }
 </style>
 </head>
@@ -27,11 +27,11 @@ html, body {
 <iframe
   id="appFrame"
   src="https://script.google.com/macros/s/AKfycbxQnhPg8AroeyHk8HRLR7EwfUHhdLBymDTKtP-SG4yiTzJGHCy1_vBuLM-18Jvp9ZXbvQ/exec"
+  allow="camera; microphone; fullscreen; autoplay"
   allowfullscreen>
 </iframe>
 
 <script>
-// fallback untuk HP lama
 function setRealHeight() {
   document.getElementById("appFrame").style.height =
     window.innerHeight + "px";
