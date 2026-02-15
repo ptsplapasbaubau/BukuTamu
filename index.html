@@ -1073,111 +1073,143 @@
         }
 
         // ==================== HANDLE FORM ====================
-        async function handleSubmit(e) {
-            e.preventDefault();
+        // ==================== KONEKSI GOOGLE SHEETS ====================
+async function handleSubmit(e) {
+    e.preventDefault();
+    
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div><span>Menyimpan...</span>';
+
+    try {
+        if (!validateForm()) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Simpan ke Google Sheets & Drive</span>';
+            return;
+        }
+
+        // Buat FormData untuk dikirim
+        const formData = new FormData();
+        formData.append('action', 'add');
+        formData.append('nama', document.getElementById('nama').value.trim());
+        formData.append('instansi', document.getElementById('instansi').value.trim() || '-');
+        formData.append('email', document.getElementById('email').value.trim() || '-');
+        formData.append('telepon', document.getElementById('telepon').value.trim() || '-');
+        formData.append('keperluan', document.getElementById('keperluan').value);
+        formData.append('bertemu', document.getElementById('bertemu').value.trim() || '-');
+        formData.append('pesan', document.getElementById('pesan').value.trim() || '-');
+        formData.append('suhu', document.getElementById('suhu').checked ? 'Normal' : 'Tidak Dicek');
+        
+        // Tambahkan foto (langsung file asli)
+        const fotoFile = document.getElementById('foto').files[0];
+        if (fotoFile) {
+            formData.append('foto', fotoFile);
+            console.log('Foto size:', (fotoFile.size / 1024 / 1024).toFixed(2), 'MB');
+            console.log('Foto type:', fotoFile.type);
+        }
+
+        if (isOnline) {
+            // Simpan ke Google Sheets
+            console.log('Saving to sheet...');
             
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<div class="spinner"></div><span>Menyimpan...</span>';
-
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const responseText = await response.text();
+            console.log('Raw response:', responseText);
+            
+            let result;
             try {
-                if (!validateForm()) {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Simpan ke Google Sheets & Drive</span>';
-                    return;
-                }
-
-                // Buat FormData untuk dikirim
-                const formData = new FormData();
-                formData.append('action', 'add');
-                formData.append('nama', document.getElementById('nama').value.trim());
-                formData.append('instansi', document.getElementById('instansi').value.trim() || '-');
-                formData.append('email', document.getElementById('email').value.trim() || '-');
-                formData.append('telepon', document.getElementById('telepon').value.trim() || '-');
-                formData.append('keperluan', document.getElementById('keperluan').value);
-                formData.append('bertemu', document.getElementById('bertemu').value.trim() || '-');
-                formData.append('pesan', document.getElementById('pesan').value.trim() || '-');
-                formData.append('suhu', document.getElementById('suhu').checked ? 'Normal' : 'Tidak Dicek');
+                result = JSON.parse(responseText);
+            } catch (e) {
+                console.error('Parse error:', responseText);
+                throw new Error('Server returned invalid response: ' + responseText.substring(0, 100));
+            }
+            
+            if (result.success) {
+                showToast('✅ Data berhasil disimpan!', 'success');
                 
-                // Tambahkan foto (langsung file asli)
-                const fotoFile = document.getElementById('foto').files[0];
-                if (fotoFile) {
-                    formData.append('foto', fotoFile);
-                    console.log('Foto size:', (fotoFile.size / 1024 / 1024).toFixed(2), 'MB');
-                }
-
-                if (isOnline) {
-                    // Simpan ke Google Sheets
-                    console.log('Saving to sheet...');
-                    
-                    const response = await fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    
-                    const responseText = await response.text();
-                    console.log('Raw response:', responseText.substring(0, 200));
-                    
-                    let result;
-                    try {
-                        result = JSON.parse(responseText);
-                    } catch (e) {
-                        console.error('Parse error:', responseText);
-                        throw new Error('Server returned invalid response');
-                    }
-                    
-                    if (result.success) {
-                        showToast('✅ Data berhasil disimpan ke Google Sheets & Drive!', 'success');
-                        
-                        // Refresh data
-                        await loadFromSheet();
-                        await updateStatsFromSheet();
-                    } else {
-                        throw new Error(result.error || 'Gagal menyimpan');
-                    }
-                } else {
-                    // Simpan ke pending queue (offline mode)
-                    showToast('📱 Mode offline - Data akan disinkronkan nanti', 'warning');
-                    
-                    // Baca file foto sebagai base64 untuk disimpan di localStorage
-                    const reader = new FileReader();
-                    reader.onload = function(readerEvent) {
-                        const guestData = {
-                            nama: document.getElementById('nama').value.trim(),
-                            instansi: document.getElementById('instansi').value.trim() || '-',
-                            email: document.getElementById('email').value.trim() || '-',
-                            telepon: document.getElementById('telepon').value.trim() || '-',
-                            keperluan: document.getElementById('keperluan').value,
-                            bertemu: document.getElementById('bertemu').value.trim() || '-',
-                            pesan: document.getElementById('pesan').value.trim() || '-',
-                            suhu: document.getElementById('suhu').checked ? 'Normal' : 'Tidak Dicek',
-                            fotoBase64: readerEvent.target.result,
-                            id: generateId(),
-                            waktu: new Date().toISOString(),
-                            timestamp: Date.now()
-                        };
-                        
-                        pendingData.push(guestData);
-                        saveToLocal('pendingData', pendingData);
-                        
-                        // Reset form
-                        resetForm();
-                    };
-                    reader.readAsDataURL(fotoFile);
-                    return; // Exit early karena async
-                }
-
+                // Refresh data
+                setTimeout(() => {
+                    loadFromSheet();
+                    updateStatsFromSheet();
+                }, 1000);
+                
                 // Reset form
                 resetForm();
-                
-            } catch (error) {
-                console.error('Submit error:', error);
-                showToast('❌ Error: ' + error.message, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Simpan ke Google Sheets & Drive</span>';
+            } else {
+                throw new Error(result.error || 'Gagal menyimpan');
             }
+        } else {
+            // Mode offline - simpan ke localStorage
+            const reader = new FileReader();
+            reader.onload = function(readerEvent) {
+                const guestData = {
+                    nama: document.getElementById('nama').value.trim(),
+                    instansi: document.getElementById('instansi').value.trim() || '-',
+                    email: document.getElementById('email').value.trim() || '-',
+                    telepon: document.getElementById('telepon').value.trim() || '-',
+                    keperluan: document.getElementById('keperluan').value,
+                    bertemu: document.getElementById('bertemu').value.trim() || '-',
+                    pesan: document.getElementById('pesan').value.trim() || '-',
+                    suhu: document.getElementById('suhu').checked ? 'Normal' : 'Tidak Dicek',
+                    fotoBase64: readerEvent.target.result,
+                    id: generateId(),
+                    waktu: new Date().toISOString(),
+                    timestamp: Date.now()
+                };
+                
+                pendingData.push(guestData);
+                saveToLocal('pendingData', pendingData);
+                
+                showToast('📱 Data disimpan lokal (offline mode)', 'warning');
+                
+                // Reset form
+                resetForm();
+            };
+            reader.readAsDataURL(fotoFile);
+            return; // Exit early karena async
         }
+        
+    } catch (error) {
+        console.error('Submit error:', error);
+        showToast('❌ Error: ' + error.message, 'error');
+        
+        // Reset button
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Simpan ke Google Sheets & Drive</span>';
+    }
+}
+
+// Fungsi untuk test koneksi sederhana
+async function testConnection() {
+    try {
+        showToast('Menguji koneksi...', 'info');
+        
+        // Test dengan GET request
+        const response = await fetch(SCRIPT_URL + '?action=getStats');
+        const text = await response.text();
+        console.log('Test response:', text);
+        
+        try {
+            const result = JSON.parse(text);
+            if (result && result.success) {
+                showToast('✅ Koneksi berhasil! Total tamu: ' + (result.total || 0), 'success');
+                document.getElementById('totalTamu').textContent = result.total || 0;
+                document.getElementById('todayTamu').textContent = result.today || 0;
+            } else {
+                showToast('❌ Koneksi gagal: ' + (result.error || 'Unknown error'), 'error');
+            }
+        } catch (e) {
+            showToast('❌ Invalid response from server', 'error');
+        }
+    } catch (error) {
+        console.error('Test connection error:', error);
+        showToast('❌ Koneksi gagal: ' + error.message, 'error');
+    }
+}
 
         async function syncPendingData() {
             if (!isOnline || pendingData.length === 0) return;
